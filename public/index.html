@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager API Tester</title>
+    <style>
+        .container { margin: 20px; }
+        .section { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h3>Create Task</h3>
+            <input type="text" id="createTitle" placeholder="Title">
+            <input type="text" id="createStatus" placeholder="Status">
+            <button onclick="createTask()">Create</button>
+        </div>
+
+        <div class="section">
+            <h3>Edit Task</h3>
+            <input type="text" id="currentTitle" placeholder="Current Title">
+            <input type="text" id="newTitle" placeholder="New Title">
+            <input type="text" id="newStatus" placeholder="New Status">
+            <button onclick="editTask()">Edit</button>
+        </div>
+
+        <div class="section">
+            <h3>Delete Task</h3>
+            <input type="text" id="deleteTitle" placeholder="Title">
+            <button onclick="deleteTask()">Delete</button>
+        </div>
+    </div>
+
+    <script>
+        async function createTask() {
+            const title = document.getElementById('createTitle').value;
+            const status = document.getElementById('createStatus').value;
+            try {
+                const response = await fetch('/post-tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, status })
+                });
+                if (!response.ok) throw new Error('Failed to create task');
+                alert('Task created successfully');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    
+        async function editTask() {
+            const currentTitle = document.getElementById('currentTitle').value;
+            const newTitle = document.getElementById('newTitle').value;
+            const newStatus = document.getElementById('newStatus').value;
+            try {
+                const response = await fetch('/update-tasks', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentTitle, newTitle, newStatus })
+                });
+                if (!response.ok) throw new Error('Failed to update task');
+                alert('Task updated successfully');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    
+        async function deleteTask() {
+            const title = document.getElementById('deleteTitle').value;
+            try {
+                const response = await fetch('/delete-tasks', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title })
+                });
+                if (!response.ok) throw new Error('Failed to delete task');
+                alert('Task deleted successfully');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
